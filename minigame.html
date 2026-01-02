@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Сундук Древних</title>
+<style>
+  body {
+    background:#111;
+    color:#eee;
+    font-family:sans-serif;
+    text-align:center;
+  }
+  .lock {
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin:30px;
+  }
+  .disk {
+    width:80px;
+    height:80px;
+    border:2px solid #888;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    cursor:pointer;
+    user-select:none;
+  }
+  button {
+    padding:10px 20px;
+    font-size:16px;
+  }
+  .runes {
+    margin-top:20px;
+    border-top:1px solid #444;
+    padding-top:15px;
+  }
+  .rune-list {
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    font-size:28px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Механический замок сундука</h1>
+<p>Подберите комбинацию символов.</p>
+<p>Попытки: <span id="tries">6</span></p>
+
+<div class="lock">
+  <div class="disk" onclick="spin(0)">☀</div>
+  <div class="disk" onclick="spin(1)">☀</div>
+  <div class="disk" onclick="spin(2)">☀</div>
+  <div class="disk" onclick="spin(3)">☀</div>
+</div>
+
+<button onclick="check()">Проверить</button>
+
+<p id="result"></p>
+
+<div class="runes">
+  <h3>Алфавит рун</h3>
+  <div class="rune-list">
+    <span>☀</span>
+    <span>☾</span>
+    <span>✦</span>
+    <span>⚙</span>
+    <span>♠</span>
+  </div>
+
+</div>
+
+<script>
+const symbols = ["☀","☾","✦","⚙","♠"];
+const disks = document.querySelectorAll(".disk");
+
+const correct = Array.from({length:4}, () =>
+  symbols[Math.floor(Math.random()*symbols.length)]
+);
+
+let tries = 6;
+
+function spin(i){
+  const current = disks[i].textContent;
+  const idx = symbols.indexOf(current);
+  disks[i].textContent = symbols[(idx+1)%symbols.length];
+}
+
+function check(){
+  if(tries <= 0) return;
+
+  const attempt = Array.from(disks).map(d => d.textContent);
+
+  let exact = 0;
+  let tempCorrect = [];
+  let tempAttempt = [];
+
+  for(let i=0;i<4;i++){
+    if(attempt[i] === correct[i]){
+      exact++;
+    } else {
+      tempCorrect.push(correct[i]);
+      tempAttempt.push(attempt[i]);
+    }
+  }
+
+  let partial = 0;
+  for(let sym of tempAttempt){
+    const idx = tempCorrect.indexOf(sym);
+    if(idx !== -1){
+      partial++;
+      tempCorrect.splice(idx,1);
+    }
+  }
+
+  if(exact === 4){
+    document.getElementById("result").textContent =
+      "ЩЕЛЧОК. Все механизмы совпали. Сундук открыт.";
+    return;
+  }
+
+  tries--;
+  document.getElementById("tries").textContent = tries;
+
+  if(tries === 0){
+    document.getElementById("result").textContent =
+      `Точные: ${exact}, неточные: ${partial}. Замок разламывается — это мимик.`;
+  } else {
+    document.getElementById("result").textContent =
+      `Точные совпадения: ${exact}, неточные: ${partial}.`;
+  }
+}
+</script>
+
+</body>
+</html>
