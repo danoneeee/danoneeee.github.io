@@ -164,7 +164,7 @@
 </div>
 
 <div class="runes">
-  <h3>Алфавит рун замка</h3>
+  <h3>Алфавит рун</h3>
   <div class="rune-list">
     <span>☀</span>
     <span>☾</span>
@@ -245,7 +245,7 @@ function check(){
   if(tries === 0){
     animateDisks('shakeStrong');
     document.getElementById("result").textContent =
-      `Точные: ${exact}, неточные: ${partial}. Замок разламывается — это мимик. Правильная комбинация: ${correct.join('')}`;
+      `Точные: ${exact}, неточные: ${partial}. Замок разламывается — это мимик. Кидайте инициативу! Правильная комбинация: ${correct.join('')}`;
   } else {
     animateDisks('shake');
     document.getElementById("result").textContent =
